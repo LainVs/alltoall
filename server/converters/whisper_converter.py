@@ -33,7 +33,13 @@ class WhisperConverter(BaseConverter):
             
             # 执行识别
             # fp16=False 可以在没有 GPU 的机器上更稳定运行
-            result = model.transcribe(file_path, fp16=False)
+            # initial_prompt 引导模型输出简体中文
+            result = model.transcribe(
+                file_path, 
+                fp16=False, 
+                language="zh",
+                initial_prompt="以下是普通话的简体中文。"
+            )
             text = result["text"].strip()
             
             # 根据目标后缀返回内容

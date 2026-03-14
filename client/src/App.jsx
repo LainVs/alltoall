@@ -153,11 +153,28 @@ function App() {
 
     const totalFiles = files.length;
     let successCount = 0;
+    let simulatedInterval;
 
     try {
       // 对每个文件进行转换以展示真实进度
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        
+        // 每个文件的进度区间
+        const startProgress = (i / totalFiles) * 100;
+        const endProgress = ((i + 1) / totalFiles) * 100;
+        
+        // 清除上一个文件的模拟计时器
+        if (simulatedInterval) clearInterval(simulatedInterval);
+        
+        // 开启模拟增长：在该文件的 0% 到 90% 区间内缓慢增长
+        let currentSimulated = 0;
+        simulatedInterval = setInterval(() => {
+          currentSimulated += (100 - currentSimulated) * 0.05; // 渐近增长
+          const simulatedValue = startProgress + (currentSimulated / 100) * (endProgress - startProgress) * 0.9;
+          setProgress(Math.round(simulatedValue));
+        }, 300);
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('target_format', targetFormat);
@@ -189,13 +206,16 @@ function App() {
         window.URL.revokeObjectURL(url);
 
         successCount++;
-        setProgress(Math.round((successCount / totalFiles) * 100));
+        // 文件处理完，立即跳到该文件的 100% 进度
+        setProgress(Math.round(endProgress));
       }
 
+      if (simulatedInterval) clearInterval(simulatedInterval);
       setStatus('success');
       setMessage(t('success'));
       setFiles([]);
     } catch (err) {
+      if (simulatedInterval) clearInterval(simulatedInterval);
       console.error(err);
       setStatus('error');
       setMessage(t('error'));
