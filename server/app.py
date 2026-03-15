@@ -7,13 +7,24 @@ from converters.ipynb_to_md import IpynbToMdConverter
 from converters.pandoc_converter import PandocConverter
 from converters.ffmpeg_converter import FFmpegConverter
 from converters.whisper_converter import WhisperConverter
+from converters.office_converters import ExcelConverter, DocxToPdfConverter
+
+import logging
+
+# 配置日志到文件
+logging.basicConfig(
+    filename='server.log',
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s: %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
 
 # 注册转换器
 # 格式: { source_ext: { target_ext: converter_instance } }
-# 使用 small 模型，在性能和准确度之间取得平衡 (中文识别大幅提升)
+# 使用 small 模型，在性能 and 准确度之间取得平衡 (中文识别大幅提升)
 whisper_converter_md = WhisperConverter("", ".md", model_size="small")
 whisper_converter_txt = WhisperConverter("", ".txt", model_size="small")
 
@@ -23,11 +34,17 @@ converters_map = {
     },
     ".md": {
         ".docx": PandocConverter(".md", ".docx"),
-        ".pdf": PandocConverter(".md", ".pdf"),
         ".html": PandocConverter(".md", ".html")
     },
     ".docx": {
-        ".md": PandocConverter(".docx", ".md")
+        ".md": PandocConverter(".docx", ".md"),
+        ".pdf": DocxToPdfConverter()
+    },
+    ".xlsx": {
+        ".csv": ExcelConverter(".xlsx", ".csv")
+    },
+    ".csv": {
+        ".xlsx": ExcelConverter(".csv", ".xlsx")
     },
     ".html": {
         ".md": PandocConverter(".html", ".md")
@@ -101,11 +118,12 @@ def convert_file():
     converter = available_targets[target_format]
     
     # 使用临时文件处理
-    with tempfile.NamedTemporaryFile(delete=False, suffix=src_ext) as temp_in:
+    temp_in = tempfile.NamedTemporaryFile(delete=False, suffix=src_ext)
+    try:
         file.save(temp_in.name)
         temp_in_path = temp_in.name
-
-    try:
+        temp_in.close()  # 必须先关闭，否则在 Windows 上 Pandoc 等外部工具无法读取
+        
         content, out_ext = converter.convert(temp_in_path)
         
         # 处理输出文件名
@@ -127,6 +145,7 @@ def convert_file():
         )
         
     except Exception as e:
+        logger.error(f"Conversion error: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), 500
     finally:
         if os.path.exists(temp_in_path):

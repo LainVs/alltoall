@@ -26,7 +26,7 @@ class PandocConverter(BaseConverter):
             # -s: standalone
             # -o: output
             result = subprocess.run(
-                ['pandoc', file_path, '-s', '-o', output_path],
+                ['pandoc', file_path, '--from=markdown-yaml_metadata_block', '-s', '-o', output_path],
                 capture_output=True,
                 text=True,
                 check=True

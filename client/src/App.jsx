@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Upload, FileText, CheckCircle, XCircle, 
+import {
+  Upload, FileText, CheckCircle, XCircle,
   Loader2, ArrowRight, X, Search, Settings2,
   ChevronRight, Download, Languages
 } from 'lucide-react';
@@ -12,7 +12,7 @@ const API_BASE_URL = 'http://localhost:5000';
 const TRANSLATIONS = {
   zh: {
     title: 'All to All',
-    subtitle: '专业级文件转换套件',
+    subtitle: '欢迎回来',
     dropFiles: '点击或拖拽文件到这里',
     browseFiles: '支持选择多个文件',
     addMore: '添加更多文件',
@@ -75,8 +75,9 @@ function App() {
       try {
         const response = await axios.get(`${API_BASE_URL}/formats`);
         setSupportedFormats(response.data);
-      } catch (err) {
-        console.error('Failed to fetch formats:', err);
+      } catch (error) {
+        console.error('Failed to fetch formats:', error);
+        // Optionally, you could set a status/message here for format fetching errors
       }
     };
     fetchFormats();
@@ -91,7 +92,7 @@ function App() {
     setFiles(prev => {
       const combined = [...prev, ...newFiles];
       // 去重基于文件名
-      return combined.filter((file, index, self) => 
+      return combined.filter((file, index, self) =>
         index === self.findIndex((f) => f.name === file.name)
       );
     });
@@ -120,25 +121,25 @@ function App() {
   // 根据当前文件列表计算可用的目标格式
   const availableTargetFormats = useMemo(() => {
     if (files.length === 0) return [];
-    
+
     // 获取所有文件的后缀
     const exts = files.map(f => `.${f.name.split('.').pop().toLowerCase()}`);
-    
+
     // 找出所有文件共同支持的目标格式（交集）
     if (exts.length === 0) return [];
-    
+
     let intersection = supportedFormats[exts[0]] || [];
     for (let i = 1; i < exts.length; i++) {
       const targets = supportedFormats[exts[i]] || [];
       intersection = intersection.filter(fmt => targets.includes(fmt));
     }
-    
+
     return intersection.sort();
   }, [files, supportedFormats]);
 
   // 搜索过滤后的格式
   const filteredFormats = useMemo(() => {
-    return availableTargetFormats.filter(fmt => 
+    return availableTargetFormats.filter(fmt =>
       fmt.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [availableTargetFormats, searchQuery]);
@@ -159,14 +160,14 @@ function App() {
       // 对每个文件进行转换以展示真实进度
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        
+
         // 每个文件的进度区间
         const startProgress = (i / totalFiles) * 100;
         const endProgress = ((i + 1) / totalFiles) * 100;
-        
+
         // 清除上一个文件的模拟计时器
         if (simulatedInterval) clearInterval(simulatedInterval);
-        
+
         // 开启模拟增长：在该文件的 0% 到 90% 区间内缓慢增长
         let currentSimulated = 0;
         simulatedInterval = setInterval(() => {
@@ -187,14 +188,14 @@ function App() {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        
+
         let outputName = '';
         const contentDisposition = response.headers['content-disposition'];
         if (contentDisposition) {
           const match = contentDisposition.match(/filename="(.+)"/);
           if (match) outputName = match[1];
         }
-        
+
         if (!outputName) {
           outputName = file.name.replace(/\.[^/.]+$/, "") + targetFormat;
         }
@@ -216,10 +217,29 @@ function App() {
       setFiles([]);
     } catch (err) {
       if (simulatedInterval) clearInterval(simulatedInterval);
-      console.error(err);
+      console.error('Conversion error:', err);
+      
+      let errorDetail = '';
+      if (err.response && err.response.data instanceof Blob) {
+        // Since responseType is 'blob', we need to read it to get the JSON error
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const errorJson = JSON.parse(reader.result);
+            console.error('Backend error:', errorJson.error);
+            setMessage(errorJson.error || t('error'));
+          } catch (e) {
+            setMessage(t('error'));
+          }
+        };
+        reader.readAsText(err.response.data);
+      } else {
+        setMessage(t('error'));
+      }
+      
       setStatus('error');
-      setMessage(t('error'));
-    } finally {
+    }
+ finally {
       // 延迟关闭上传状态以展示 100% 进度
       setTimeout(() => {
         setIsUploading(false);
@@ -232,14 +252,14 @@ function App() {
     <div className="app-container">
       {/* 语言切换器 */}
       <div className="language-selector">
-        <div 
+        <div
           className={`lang-option ${language === 'zh' ? 'active' : ''}`}
           onClick={() => setLanguage('zh')}
         >
           中
         </div>
         <div className="lang-divider"></div>
-        <div 
+        <div
           className={`lang-option ${language === 'en' ? 'active' : ''}`}
           onClick={() => setLanguage('en')}
         >
@@ -247,7 +267,7 @@ function App() {
         </div>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -271,7 +291,7 @@ function App() {
         </div>
 
         {/* 文件上传区 */}
-        <div 
+        <div
           className={`drop-zone ${isDragging ? 'dragging' : ''} ${files.length > 0 ? 'compact' : ''}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -279,11 +299,11 @@ function App() {
           onClick={() => document.getElementById('file-input').click()}
           style={files.length > 0 ? { padding: '2rem' } : {}}
         >
-          <input 
+          <input
             id="file-input"
-            type="file" 
+            type="file"
             multiple
-            hidden 
+            hidden
             onChange={onFileChange}
           />
           <div className="icon-wrapper">
@@ -306,14 +326,14 @@ function App() {
         {/* 文件列表 */}
         <AnimatePresence>
           {files.length > 0 && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               className="file-list"
             >
               {files.map((file, idx) => (
-                <motion.div 
+                <motion.div
                   key={`${file.name}-${idx}`}
                   layout
                   initial={{ opacity: 0, x: -10 }}
@@ -339,16 +359,16 @@ function App() {
         {/* 格式选择面板 */}
         <AnimatePresence>
           {files.length > 0 && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="format-selection-panel"
             >
               <div className="search-container">
                 <Search className="search-icon" size={16} />
-                <input 
-                  type="text" 
-                  placeholder={t('searchPlaceholder')} 
+                <input
+                  type="text"
+                  placeholder={t('searchPlaceholder')}
                   className="search-input"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -376,7 +396,7 @@ function App() {
               </div>
 
               <div className="options-container">
-                <div 
+                <div
                   className={`toggle-container ${keepName ? 'active' : ''}`}
                   onClick={() => setKeepName(!keepName)}
                 >
@@ -392,7 +412,7 @@ function App() {
           )}
         </AnimatePresence>
 
-        <button 
+        <button
           className="button"
           disabled={files.length === 0 || !targetFormat || status === 'uploading'}
           onClick={handleConvert}
@@ -413,7 +433,7 @@ function App() {
 
         <AnimatePresence>
           {isUploading && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -424,7 +444,7 @@ function App() {
                 <span>{progress}%</span>
               </div>
               <div className="progress-track">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.3 }}
@@ -437,7 +457,7 @@ function App() {
 
         <AnimatePresence>
           {message && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
