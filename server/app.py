@@ -27,6 +27,8 @@ CORS(app)
 # 使用 small 模型，在性能 and 准确度之间取得平衡 (中文识别大幅提升)
 whisper_converter_md = WhisperConverter("", ".md", model_size="small")
 whisper_converter_txt = WhisperConverter("", ".txt", model_size="small")
+whisper_converter_docx = WhisperConverter("", ".docx", model_size="small")
+whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 
 converters_map = {
     ".ipynb": {
@@ -54,28 +56,38 @@ converters_map = {
         ".wav": FFmpegConverter(".mp4", ".wav"),
         ".aac": FFmpegConverter(".mp4", ".aac"),
         ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
     },
     ".mp3": {
         ".wav": FFmpegConverter(".mp3", ".wav"),
         ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
     },
     ".wav": {
         ".mp3": FFmpegConverter(".wav", ".mp3"),
         ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
     },
     ".mkv": {
         ".mp3": FFmpegConverter(".mkv", ".mp3"),
         ".wav": FFmpegConverter(".mkv", ".wav"),
         ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
     },
     ".mov": {
         ".mp3": FFmpegConverter(".mov", ".mp3"),
         ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
     }
 }
 
