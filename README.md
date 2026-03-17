@@ -21,7 +21,7 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 - **Word (.docx)** ➔ PDF, Markdown (.md)
 - **Excel (.xlsx)** ↔ CSV
 
-### 媒体类 (AI 驱动)
+### 媒体类 (转文本)
 - **视频提取**: MP4 / MKV / MOV ➔ MP3, WAV, AAC
 - **内容转录**: MP4 / MP3 / WAV / MKV / MOV ➔ Word (.docx), PDF (.pdf), Markdown (.md), Text (.txt)
 
