@@ -208,6 +208,10 @@ body {
   overflow: hidden;
 }
 
+.file-info i {
+  color: var(--accent-color);
+}
+
 .file-name {
   white-space: nowrap;
   overflow: hidden;
