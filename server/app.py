@@ -8,6 +8,7 @@ from converters.pandoc_converter import PandocConverter
 from converters.ffmpeg_converter import FFmpegConverter
 from converters.whisper_converter import WhisperConverter
 from converters.office_converters import ExcelConverter, DocxToPdfConverter
+from converters.video_to_gif import VideoToGifConverter
 
 import logging
 
@@ -58,7 +59,8 @@ converters_map = {
         ".md": whisper_converter_md,
         ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
-        ".pdf": whisper_converter_pdf
+        ".pdf": whisper_converter_pdf,
+        ".gif": VideoToGifConverter(".mp4")
     },
     ".mp3": {
         ".wav": FFmpegConverter(".mp3", ".wav"),
@@ -80,14 +82,30 @@ converters_map = {
         ".md": whisper_converter_md,
         ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
-        ".pdf": whisper_converter_pdf
+        ".pdf": whisper_converter_pdf,
+        ".gif": VideoToGifConverter(".mkv")
     },
     ".mov": {
         ".mp3": FFmpegConverter(".mov", ".mp3"),
-        ".md": whisper_converter_md,
-        ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
-        ".pdf": whisper_converter_pdf
+        ".pdf": whisper_converter_pdf,
+        ".gif": VideoToGifConverter(".mov")
+    },
+    ".avi": {
+        ".mp3": FFmpegConverter(".avi", ".mp3"),
+        ".gif": VideoToGifConverter(".avi")
+    },
+    ".flv": {
+        ".mp3": FFmpegConverter(".flv", ".mp3"),
+        ".gif": VideoToGifConverter(".flv")
+    },
+    ".wmv": {
+        ".mp3": FFmpegConverter(".wmv", ".mp3"),
+        ".gif": VideoToGifConverter(".wmv")
+    },
+    ".webm": {
+        ".mp3": FFmpegConverter(".webm", ".mp3"),
+        ".gif": VideoToGifConverter(".webm")
     }
 }
 

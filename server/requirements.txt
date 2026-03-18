@@ -1,0 +1,9 @@
+flask
+flask-cors
+nbconvert
+nbformat
+openai-whisper
+python-docx
+pymupdf
+pandas
+openpyxl

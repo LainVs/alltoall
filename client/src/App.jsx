@@ -70,16 +70,21 @@ function App() {
   };
 
   // 获取支持的格式
-  useEffect(() => {
-    const fetchFormats = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/formats`);
-        setSupportedFormats(response.data);
-      } catch (error) {
-        console.error('Failed to fetch formats:', error);
-        // Optionally, you could set a status/message here for format fetching errors
+  const fetchFormats = async (retries = 3) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/formats`);
+      setSupportedFormats(response.data);
+      return true;
+    } catch (error) {
+      console.error('Failed to fetch formats:', error);
+      if (retries > 0) {
+        setTimeout(() => fetchFormats(retries - 1), 2000);
       }
-    };
+      return false;
+    }
+  };
+
+  useEffect(() => {
     fetchFormats();
   }, []);
 
@@ -89,6 +94,11 @@ function App() {
   };
 
   const addFiles = (newFiles) => {
+    // 如果当前支持格式为空，尝试再次获取
+    if (Object.keys(supportedFormats).length === 0) {
+      fetchFormats(1);
+    }
+
     setFiles(prev => {
       const combined = [...prev, ...newFiles];
       // 去重基于文件名

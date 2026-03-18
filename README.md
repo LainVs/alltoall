@@ -9,10 +9,11 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 - **智能格式推荐**: 根据输入文件自动列出最合适的转换目标。
 - **本地 AI 驱动**: 集成 OpenAI Whisper 本地模型，提供高精度的语音转文字服务。
 - **多媒体处理**:
-  - **视频提音**: 从视频 (.mp4, .mkv, .mov) 中快速提取音频 (.mp3, .wav, .aac)。
+  - **视频提音**: 从视频 (.mp4, .mkv, .mov, .avi, .flv, .wmv, .webm) 中快速提取音频 (.mp3, .wav, .aac)。
   - **媒体转文档**: 将视频或音频直接转录为 Word (.docx)、PDF (.pdf)、Markdown (.md) 或文本 (.txt)。
+  - **GIF 制作**: 支持将视频 (.mp4, .mkv, .mov, .avi, .flv, .wmv, .webm) 转换为高质量的 GIF 动图。
 - **办公增强**: 支持 Word (.docx) 转 PDF，以及 Excel (.xlsx) 与 CSV 的互转。
-- **实时搜索与设置**: 支持目标格式搜索、原名保留选项，以及中英文界面切换。
+- **高性能与可靠性**: 优化了启动过程中的格式加载逻辑，支持自动重试，确保转换选项在任何时候都能准确显示。
 
 ## 支持的转换格式
 
@@ -21,8 +22,9 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 - **Word (.docx)** ➔ PDF, Markdown (.md)
 - **Excel (.xlsx)** ↔ CSV
 
-### 媒体类 (转文本)
-- **视频提取**: MP4 / MKV / MOV ➔ MP3, WAV, AAC
+### 媒体类
+- **视频提取**: MP4 / MKV / MOV / AVI / FLV / WMV / WEBM ➔ MP3, WAV, AAC
+- **GIF 制作**: MP4 / MKV / MOV / AVI / FLV / WMV / WEBM ➔ GIF
 - **内容转录**: MP4 / MP3 / WAV / MKV / MOV ➔ Word (.docx), PDF (.pdf), Markdown (.md), Text (.txt)
 
 ## 操作步骤

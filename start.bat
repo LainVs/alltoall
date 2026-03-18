@@ -5,7 +5,7 @@ echo ==========================================
 
 :: Start Backend
 echo Starting Backend (Flask)...
-start "All-to-All Backend" cmd /k "cd server && pip install flask flask-cors nbconvert nbformat && python app.py"
+start "All-to-All Backend" cmd /k "cd server && pip install -r requirements.txt && python app.py"
 
 :: Start Frontend
 echo Starting Frontend (Vite)...
