@@ -5,10 +5,13 @@ import tempfile
 import io
 from converters.ipynb_to_md import IpynbToMdConverter
 from converters.pandoc_converter import PandocConverter
-from converters.ffmpeg_converter import FFmpegConverter
 from converters.whisper_converter import WhisperConverter
 from converters.office_converters import ExcelConverter, DocxToPdfConverter
 from converters.video_to_gif import VideoToGifConverter
+from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
+from converters.data_converters import JsonConverter
+from converters.ipynb_converters import IpynbToHtmlConverter
+from converters.ffmpeg_converter import FFmpegConverter, VideoToImageConverter
 
 import logging
 
@@ -33,7 +36,8 @@ whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 
 converters_map = {
     ".ipynb": {
-        ".md": IpynbToMdConverter()
+        ".md": IpynbToMdConverter(),
+        ".html": IpynbToHtmlConverter()
     },
     ".md": {
         ".docx": PandocConverter(".md", ".docx"),
@@ -42,6 +46,15 @@ converters_map = {
     ".docx": {
         ".md": PandocConverter(".docx", ".md"),
         ".pdf": DocxToPdfConverter()
+    },
+    ".pdf": {
+        ".png": PdfToImageConverter(target_ext=".png"),
+        ".jpg": PdfToImageConverter(target_ext=".jpg"),
+        ".txt": PdfToTextConverter()
+    },
+    ".json": {
+        ".xlsx": JsonConverter(target_ext=".xlsx"),
+        ".csv": JsonConverter(target_ext=".csv")
     },
     ".xlsx": {
         ".csv": ExcelConverter(".xlsx", ".csv")
@@ -60,7 +73,8 @@ converters_map = {
         ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
         ".pdf": whisper_converter_pdf,
-        ".gif": VideoToGifConverter(".mp4")
+        ".gif": VideoToGifConverter(".mp4"),
+        ".jpg": VideoToImageConverter(".mp4")
     },
     ".mp3": {
         ".wav": FFmpegConverter(".mp3", ".wav"),
@@ -83,29 +97,35 @@ converters_map = {
         ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
         ".pdf": whisper_converter_pdf,
-        ".gif": VideoToGifConverter(".mkv")
+        ".gif": VideoToGifConverter(".mkv"),
+        ".jpg": VideoToImageConverter(".mkv")
     },
     ".mov": {
         ".mp3": FFmpegConverter(".mov", ".mp3"),
         ".docx": whisper_converter_docx,
         ".pdf": whisper_converter_pdf,
-        ".gif": VideoToGifConverter(".mov")
+        ".gif": VideoToGifConverter(".mov"),
+        ".jpg": VideoToImageConverter(".mov")
     },
     ".avi": {
         ".mp3": FFmpegConverter(".avi", ".mp3"),
-        ".gif": VideoToGifConverter(".avi")
+        ".gif": VideoToGifConverter(".avi"),
+        ".jpg": VideoToImageConverter(".avi")
     },
     ".flv": {
         ".mp3": FFmpegConverter(".flv", ".mp3"),
-        ".gif": VideoToGifConverter(".flv")
+        ".gif": VideoToGifConverter(".flv"),
+        ".jpg": VideoToImageConverter(".flv")
     },
     ".wmv": {
         ".mp3": FFmpegConverter(".wmv", ".mp3"),
-        ".gif": VideoToGifConverter(".wmv")
+        ".gif": VideoToGifConverter(".wmv"),
+        ".jpg": VideoToImageConverter(".wmv")
     },
     ".webm": {
         ".mp3": FFmpegConverter(".webm", ".mp3"),
-        ".gif": VideoToGifConverter(".webm")
+        ".gif": VideoToGifConverter(".webm"),
+        ".jpg": VideoToImageConverter(".webm")
     }
 }
 
@@ -157,18 +177,20 @@ def convert_file():
         content, out_ext = converter.convert(temp_in_path)
         
         # 处理输出文件名
-        keep_original_name = request.form.get('keep_name', 'true').lower() == 'true'
         base_name = os.path.splitext(file.filename)[0]
         out_filename = base_name + out_ext
         
-        # 将内容写入二进制流以便发送（有些是 bytes，有些是 str）
+        # 准备响应内容
         if isinstance(content, str):
-            content_bytes = content.encode('utf-8')
+            content_io = io.BytesIO(content.encode('utf-8'))
+        elif isinstance(content, bytes):
+            content_io = io.BytesIO(content)
         else:
-            content_bytes = content
+            # 如果 converter 直接返回了文件流
+            content_io = content
             
         return send_file(
-            io.BytesIO(content_bytes),
+            content_io,
             as_attachment=True,
             download_name=out_filename,
             mimetype='application/octet-stream'
@@ -178,8 +200,12 @@ def convert_file():
         logger.error(f"Conversion error: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), 500
     finally:
-        if os.path.exists(temp_in_path):
-            os.remove(temp_in_path)
+        # 确保输入临时文件被删除
+        if 'temp_in_path' in locals() and os.path.exists(temp_in_path):
+            try:
+                os.remove(temp_in_path)
+            except:
+                pass
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

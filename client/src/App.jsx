@@ -27,6 +27,14 @@ const TRANSLATIONS = {
     error: '转换失败，请检查文件后重试。',
     processing: '正在处理 {count} 个文件...',
     defaultTarget: '...',
+    fetching: '正在由于后端启动较慢而同步支持格式...',
+    noFormats: '未能从服务器获取到任何转换格式,请检查后端',
+    catAll: '全部',
+    catVideo: '视频',
+    catAudio: '音频',
+    catDoc: '文档',
+    catImage: '图片',
+    catData: '数据',
   },
   en: {
     title: 'All to All',
@@ -45,7 +53,23 @@ const TRANSLATIONS = {
     error: 'Conversion failed. Please check your files and try again.',
     processing: 'Converting {count} file(s)...',
     defaultTarget: '...',
+    fetching: 'Fetching supported formats...',
+    noFormats: 'No supported formats found from server.',
+    catAll: '✨ 全部',
+    catVideo: '🎬 视频',
+    catAudio: '🎵 音频',
+    catDoc: '📄 文档',
+    catImage: '🖼️ 图片',
+    catData: '📊 数据',
   }
+};
+
+const CATEGORIES = {
+  catVideo: ['gif', 'mp4', 'mkv', 'mov', 'avi', 'flv', 'wmv', 'webm'],
+  catAudio: ['mp3', 'wav', 'aac'],
+  catDoc: ['docx', 'pdf', 'md', 'html', 'txt'],
+  catImage: ['png', 'jpg'],
+  catData: ['xlsx', 'csv', 'json'],
 };
 
 function App() {
@@ -53,13 +77,15 @@ function App() {
   const [files, setFiles] = useState([]);
   const [supportedFormats, setSupportedFormats] = useState({});
   const [targetFormat, setTargetFormat] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('catAll');
+  const [searchTerm, setSearchTerm] = useState('');
   const [keepName, setKeepName] = useState(true);
   const [status, setStatus] = useState('idle'); // idle, uploading, success, error
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
 
   const t = (key, params = {}) => {
     let text = TRANSLATIONS[language][key] || key;
@@ -71,14 +97,18 @@ function App() {
 
   // 获取支持的格式
   const fetchFormats = async (retries = 3) => {
+    setIsFetching(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/formats`);
       setSupportedFormats(response.data);
+      setIsFetching(false);
       return true;
     } catch (error) {
       console.error('Failed to fetch formats:', error);
       if (retries > 0) {
         setTimeout(() => fetchFormats(retries - 1), 2000);
+      } else {
+        setIsFetching(false);
       }
       return false;
     }
@@ -130,29 +160,54 @@ function App() {
 
   // 根据当前文件列表计算可用的目标格式
   const availableTargetFormats = useMemo(() => {
-    if (files.length === 0) return [];
+    if (files.length === 0 || Object.keys(supportedFormats).length === 0) return [];
 
     // 获取所有文件的后缀
-    const exts = files.map(f => `.${f.name.split('.').pop().toLowerCase()}`);
+    const getExt = (filename) => {
+      const parts = filename.split('.');
+      if (parts.length > 1) return `.${parts.pop().toLowerCase()}`;
+      return '';
+    };
+
+    const exts = files.map(f => getExt(f.name));
 
     // 找出所有文件共同支持的目标格式（交集）
-    if (exts.length === 0) return [];
+    const getTargets = (ext) => {
+      // 兼容性搜索：尝试匹配加点或不加点的格式
+      if (supportedFormats[ext]) return supportedFormats[ext];
+      // 尝试大小写不敏感匹配
+      const key = Object.keys(supportedFormats).find(k => k.toLowerCase() === ext.toLowerCase());
+      if (key) return supportedFormats[key];
+      return [];
+    };
 
-    let intersection = supportedFormats[exts[0]] || [];
+    let intersection = getTargets(exts[0]);
     for (let i = 1; i < exts.length; i++) {
-      const targets = supportedFormats[exts[i]] || [];
+      const targets = getTargets(exts[i]);
       intersection = intersection.filter(fmt => targets.includes(fmt));
     }
 
-    return intersection.sort();
+    return [...new Set(intersection)].sort();
   }, [files, supportedFormats]);
 
-  // 搜索过滤后的格式
+  // 搜索和分类过滤后的格式
   const filteredFormats = useMemo(() => {
-    return availableTargetFormats.filter(fmt =>
-      fmt.toLowerCase().includes(searchQuery.toLowerCase())
+    let result = availableTargetFormats;
+    
+    // 1. 分类过滤
+    if (selectedCategory !== 'catAll') {
+      const allowedExts = CATEGORIES[selectedCategory];
+      result = result.filter(fmt => {
+        const cleanFmt = fmt.replace('.', '').toLowerCase();
+        return allowedExts.includes(cleanFmt);
+      });
+    }
+
+    // 2. 搜索词查询
+    return result.filter(fmt => 
+      fmt.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [availableTargetFormats, searchQuery]);
+  }, [availableTargetFormats, searchTerm, selectedCategory]);
 
   const handleConvert = async () => {
     if (files.length === 0 || !targetFormat) return;
@@ -374,19 +429,58 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               className="format-selection-panel"
             >
-              <div className="search-container">
-                <Search className="search-icon" size={16} />
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="search-box"
+              >
+                <Search size={18} className="search-icon" />
                 <input
                   type="text"
                   placeholder={t('searchPlaceholder')}
-                  className="search-input"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </div>
+              </motion.div>
+
+              {/* 分类标签栏 */}
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="category-tabs"
+              >
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`cat-chip ${selectedCategory === 'catAll' ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory('catAll')}
+                >
+                  {t('catAll')}
+                </motion.button>
+                {Object.keys(CATEGORIES).map((catKey, idx) => (
+                  <motion.button
+                    key={catKey}
+                    initial={{ x: -10, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 + idx * 0.05 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`cat-chip ${selectedCategory === catKey ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(catKey)}
+                  >
+                    {t(catKey)}
+                  </motion.button>
+                ))}
+              </motion.div>
 
               <div className="format-grid">
-                {filteredFormats.length > 0 ? (
+                {isFetching && Object.keys(supportedFormats).length === 0 ? (
+                  <p style={{ gridColumn: '1/-1', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '1rem' }}>
+                    <Loader2 className="animate-spin" size={16} /> {t('fetching')}
+                  </p>
+                ) : filteredFormats.length > 0 ? (
                   filteredFormats.map(fmt => (
                     <motion.div
                       key={fmt}
@@ -400,7 +494,7 @@ function App() {
                   ))
                 ) : (
                   <p style={{ gridColumn: '1/-1', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '1rem' }}>
-                    {availableTargetFormats.length === 0 ? t('noCommonFormats') : t('noMatches')}
+                    {Object.keys(supportedFormats).length === 0 ? t('noFormats') : (availableTargetFormats.length === 0 ? t('noCommonFormats') : t('noMatches'))}
                   </p>
                 )}
               </div>
