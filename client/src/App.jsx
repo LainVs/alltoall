@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
   Upload, FileText, CheckCircle, XCircle,
   Loader2, ArrowRight, X, Search, Settings2,
-  ChevronRight, Download, Languages
+  ChevronRight, Download, RefreshCw, Settings,
+  AlertTriangle, Loader, FolderOpen, Languages
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
@@ -35,6 +36,14 @@ const TRANSLATIONS = {
     catDoc: '📄 文档',
     catImage: '🖼️ 图片',
     catData: '📊 数据',
+    setupTitle: '环境配置自检',
+    setupSubtitle: '正在为您准备最轻盈、流畅的转换环境...',
+    setupChecking: '正在检查系统依赖...',
+    setupReady: '环境配置就绪！',
+    setupMissing: '检测到缺失组件：',
+    setupFix: '请安装上述组件后重新启动工具。',
+    installing: '正在初始化转换引擎...',
+    refresh: '重新检查环境',
   },
   en: {
     title: 'All to All',
@@ -60,7 +69,15 @@ const TRANSLATIONS = {
     catAudio: '🎵 Audio',
     catDoc: '📄 Document',
     catImage: '🖼️ Image',
-    catData: '📊 Data',
+    catData: 'Data',
+    setupTitle: 'Environment Check',
+    setupSubtitle: 'Preparing a seamless conversion environment for you...',
+    setupChecking: 'Checking system dependencies...',
+    setupReady: 'Environment ready!',
+    setupMissing: 'Missing components detected:',
+    setupFix: 'Please install the above components and restart.',
+    installing: 'Initializing engine...',
+    refresh: 'Retry Check',
   }
 };
 
@@ -76,16 +93,21 @@ function App() {
   const [language, setLanguage] = useState('zh');
   const [files, setFiles] = useState([]);
   const [supportedFormats, setSupportedFormats] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
   const [targetFormat, setTargetFormat] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('catAll');
+  const [converting, setConverting] = useState(false);
+  const [convertStatus, setConvertStatus] = useState({ type: '', message: '' });
+  const [isLargeFile, setIsLargeFile] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('catAll');
   const [keepName, setKeepName] = useState(true);
   const [status, setStatus] = useState('idle'); // idle, uploading, success, error
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [systemStatus, setSystemStatus] = useState({ ready: true, missing_deps: [] });
 
   const t = (key, params = {}) => {
     let text = TRANSLATIONS[language][key] || key;
@@ -96,17 +118,25 @@ function App() {
   };
 
   // 获取支持的格式
-  const fetchFormats = async (retries = 3) => {
+  const getFormats = async (retries = 3) => {
     setIsFetching(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/formats`);
-      setSupportedFormats(response.data);
+      if (response.data.supported_formats) {
+        setSupportedFormats(response.data.supported_formats);
+        if (response.data.system_status) {
+          setSystemStatus(response.data.system_status);
+        }
+      } else {
+        // Fallback for old API if any
+        setSupportedFormats(response.data);
+      }
       setIsFetching(false);
       return true;
     } catch (error) {
       console.error('Failed to fetch formats:', error);
       if (retries > 0) {
-        setTimeout(() => fetchFormats(retries - 1), 2000);
+        setTimeout(() => getFormats(retries - 1), 2000);
       } else {
         setIsFetching(false);
       }
@@ -115,7 +145,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetchFormats();
+    getFormats();
   }, []);
 
   const onFileChange = (e) => {
@@ -126,7 +156,7 @@ function App() {
   const addFiles = (newFiles) => {
     // 如果当前支持格式为空，尝试再次获取
     if (Object.keys(supportedFormats).length === 0) {
-      fetchFormats(1);
+      getFormats(1);
     }
 
     setFiles(prev => {
@@ -151,11 +181,47 @@ function App() {
     setIsDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const scanEntries = async (entries) => {
+    const fileList = [];
+    const readEntry = async (entry) => {
+      if (entry.isFile) {
+        const file = await new Promise((resolve) => entry.file(resolve));
+        fileList.push(file);
+      } else if (entry.isDirectory) {
+        const reader = entry.createReader();
+        const subEntries = await new Promise((resolve) => reader.readEntries(resolve));
+        for (const subEntry of subEntries) {
+          await readEntry(subEntry);
+        }
+      }
+    };
+    for (const entry of entries) {
+      await readEntry(entry);
+    }
+    return fileList;
+  };
+
+  const handleDrop = async (e) => {
     e.preventDefault();
     setIsDragging(false);
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    addFiles(droppedFiles);
+    
+    let droppedFiles = [];
+    const items = e.dataTransfer.items;
+    
+    if (items && items[0].webkitGetAsEntry) {
+      // Handle folders recursively
+      const entries = Array.from(items)
+        .map(item => item.webkitGetAsEntry())
+        .filter(entry => entry !== null);
+      droppedFiles = await scanEntries(entries);
+    } else {
+      droppedFiles = Array.from(e.dataTransfer.files);
+    }
+
+    if (droppedFiles.length > 0) {
+      addFiles(droppedFiles);
+      if (!selectedFile) setSelectedFile(droppedFiles[0]);
+    }
   };
 
   // 根据当前文件列表计算可用的目标格式
@@ -312,6 +378,54 @@ function App() {
       }, 600);
     }
   };
+
+
+  if (!systemStatus.ready && !isFetching) {
+    return (
+      <div className="app-container setup-mode">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card setup-card"
+        >
+          <div className="setup-header">
+            <Settings className="setup-icon spin-slow" size={48} />
+            <h1>{t('setupTitle')}</h1>
+            <p>{t('setupSubtitle')}</p>
+          </div>
+
+          <div className="setup-body">
+            <div className="dependency-list">
+              <div className="dep-item success">
+                <CheckCircle size={20} />
+                <span>Python {t('setupReady')}</span>
+              </div>
+              {systemStatus.missing_deps.map((dep, idx) => (
+                <div key={idx} className="dep-item error">
+                  <AlertTriangle size={20} />
+                  <span>{dep}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="setup-footer">
+              <div className="setup-status-msg">
+                <Loader className="spinner" size={20} />
+                <span>{t('setupFix')}</span>
+              </div>
+              <button 
+                className="button outline" 
+                onClick={getFormats}
+                disabled={isFetching}
+              >
+                {isFetching ? t('fetching') : t('refresh')}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">

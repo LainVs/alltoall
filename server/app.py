@@ -131,11 +131,16 @@ converters_map = {
 
 @app.route('/formats', methods=['GET'])
 def get_formats():
-    """返回支持的转换格式映射"""
-    formats = {}
-    for src, targets in converters_map.items():
-        formats[src] = list(targets.keys())
-    return jsonify(formats)
+    """Returns the map of supported conversion formats and system status."""
+    missing_deps = os.environ.get("MISSING_DEPS", "").split("|") if os.environ.get("MISSING_DEPS") else []
+    
+    return jsonify({
+        "supported_formats": {ext: list(targets.keys()) for ext, targets in converters_map.items()},
+        "system_status": {
+            "ready": len(missing_deps) == 0,
+            "missing_deps": missing_deps
+        }
+    })
 
 @app.route('/convert', methods=['POST'])
 def convert_file():

@@ -4,10 +4,25 @@ import socket
 import webbrowser
 import os
 import sys
+import shutil
 
 def is_port_open(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('127.0.0.1', port)) == 0
+
+def check_dependencies():
+    """Checks for required system tools and packages."""
+    missing = []
+    
+    # Check for ffmpeg
+    if not shutil.which("ffmpeg"):
+        missing.append("ffmpeg (用于视频和音频转换)")
+        
+    # Check for pandoc
+    if not shutil.which("pandoc"):
+        missing.append("pandoc (用于文档格式转换)")
+        
+    return missing
 
 def run():
     root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,13 +34,27 @@ def run():
     print("==========================================")
 
     # 1. Start Backend
-    print("Starting Backend (Flask)...")
-    backend_proc = subprocess.Popen(
-        [sys.executable, "app.py"],
-        cwd=server_dir,
-        # stdout=subprocess.DEVNULL, # 可选：完全隐藏输出
-        # stderr=subprocess.DEVNULL
-    )
+    def start_backend(server_dir):
+        """Starts the Flask backend server."""
+        print("🚀 正在启动后端服务 (app.py)...")
+        
+        # Pass missing dependencies as env var if any
+        env = os.environ.copy()
+        missing = check_dependencies()
+        if missing:
+            env["MISSING_DEPS"] = "|".join(missing)
+            print(f"⚠️ 检测到缺失依赖: {', '.join(missing)}")
+        
+        backend_proc = subprocess.Popen(
+            [sys.executable, "app.py"],
+            cwd=server_dir,
+            env=env, # Pass the modified environment
+            # stdout=subprocess.DEVNULL, # 可选：完全隐藏输出
+            # stderr=subprocess.DEVNULL
+        )
+        return backend_proc
+
+    backend_proc = start_backend(server_dir)
 
     # 2. Start Frontend
     print("Starting Frontend (Vite)...")
