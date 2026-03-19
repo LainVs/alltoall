@@ -179,7 +179,11 @@ def convert_file():
         temp_in_path = temp_in.name
         temp_in.close()  # 必须先关闭，否则在 Windows 上 Pandoc 等外部工具无法读取
         
-        content, out_ext = converter.convert(temp_in_path)
+        kwargs = {}
+        if isinstance(converter, WhisperConverter):
+            kwargs['device_pref'] = request.form.get('device_pref', 'auto')
+            
+        content, out_ext = converter.convert(temp_in_path, **kwargs)
         
         # 处理输出文件名
         base_name = os.path.splitext(file.filename)[0]

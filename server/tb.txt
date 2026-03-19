@@ -1,0 +1,285 @@
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\Desktop\alltoall\server\app.py", line 127, in convert_file
+    content, out_ext = converter.convert(temp_in_path)
+                       ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\Desktop\alltoall\server\converters\whisper_converter.py", line 29, in convert
+    if not os.path.exists(file_path):
+           ^^
+NameError: name 'os' is not defined. Did you forget to import 'os'?
+2026-03-16 10:45:22,860 INFO: 127.0.0.1 - - [16/Mar/2026 10:45:22] "[35m[1mPOST /convert HTTP/1.1[0m" 500 -
+2026-03-16 10:45:30,043 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-16 10:45:30,944 INFO:  * Restarting with stat
+2026-03-16 10:45:36,647 WARNING:  * Debugger is active!
+2026-03-16 10:45:36,662 INFO:  * Debugger PIN: 165-433-417
+2026-03-16 10:46:00,487 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\converters\\whisper_converter.py', reloading
+2026-03-16 10:46:01,145 INFO:  * Restarting with stat
+2026-03-16 10:46:05,870 WARNING:  * Debugger is active!
+2026-03-16 10:46:05,915 INFO:  * Debugger PIN: 165-433-417
+2026-03-16 10:47:43,274 INFO: 127.0.0.1 - - [16/Mar/2026 10:47:43] "GET /formats HTTP/1.1" 200 -
+2026-03-16 10:48:37,083 INFO: 127.0.0.1 - - [16/Mar/2026 10:48:37] "GET /formats HTTP/1.1" 200 -
+2026-03-16 10:48:37,344 INFO: 127.0.0.1 - - [16/Mar/2026 10:48:37] "GET /formats HTTP/1.1" 200 -
+2026-03-16 10:50:07,090 INFO: 127.0.0.1 - - [16/Mar/2026 10:50:07] "GET /formats HTTP/1.1" 200 -
+2026-03-16 10:50:07,348 INFO: 127.0.0.1 - - [16/Mar/2026 10:50:07] "GET /formats HTTP/1.1" 200 -
+2026-03-16 10:50:22,145 INFO: 127.0.0.1 - - [16/Mar/2026 10:50:22] "POST /convert HTTP/1.1" 200 -
+2026-03-16 10:50:54,344 INFO: 127.0.0.1 - - [16/Mar/2026 10:50:54] "POST /convert HTTP/1.1" 200 -
+2026-03-16 10:52:25,105 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\converters\\whisper_converter.py', reloading
+2026-03-16 10:52:26,059 INFO:  * Restarting with stat
+2026-03-16 10:52:33,575 WARNING:  * Debugger is active!
+2026-03-16 10:52:33,599 INFO:  * Debugger PIN: 165-433-417
+2026-03-16 10:53:18,562 INFO: 127.0.0.1 - - [16/Mar/2026 10:53:18] "POST /convert HTTP/1.1" 200 -
+2026-03-16 11:18:43,084 INFO: 127.0.0.1 - - [16/Mar/2026 11:18:43] "POST /convert HTTP/1.1" 200 -
+2026-03-18 21:39:36,651 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 21:39:36,652 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 21:39:36,653 INFO:  * Restarting with stat
+2026-03-18 21:39:41,065 WARNING:  * Debugger is active!
+2026-03-18 21:39:41,083 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 21:41:30,732 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 21:41:30,733 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 21:41:30,736 INFO:  * Restarting with stat
+2026-03-18 21:41:36,567 WARNING:  * Debugger is active!
+2026-03-18 21:41:36,587 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 21:43:31,167 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 21:43:31,168 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 21:43:31,170 INFO:  * Restarting with stat
+2026-03-18 21:43:39,195 WARNING:  * Debugger is active!
+2026-03-18 21:43:39,226 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 21:57:17,569 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 21:57:17,569 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 21:57:17,571 INFO:  * Restarting with stat
+2026-03-18 21:57:22,283 WARNING:  * Debugger is active!
+2026-03-18 21:57:22,301 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 21:57:33,405 INFO: 127.0.0.1 - - [18/Mar/2026 21:57:33] "HEAD /formats HTTP/1.1" 200 -
+2026-03-18 21:57:33,408 INFO: 127.0.0.1 - - [18/Mar/2026 21:57:33] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:02:31,709 INFO: 127.0.0.1 - - [18/Mar/2026 22:02:31] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:02:31,967 INFO: 127.0.0.1 - - [18/Mar/2026 22:02:31] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:02:48,437 INFO: 127.0.0.1 - - [18/Mar/2026 22:02:48] "POST /convert HTTP/1.1" 200 -
+2026-03-18 22:03:14,366 INFO: 127.0.0.1 - - [18/Mar/2026 22:03:14] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:03:14,620 INFO: 127.0.0.1 - - [18/Mar/2026 22:03:14] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:03:21,646 INFO: 127.0.0.1 - - [18/Mar/2026 22:03:21] "POST /convert HTTP/1.1" 200 -
+2026-03-18 22:03:23,432 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:03:23,433 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:03:23,435 INFO:  * Restarting with stat
+2026-03-18 22:03:31,372 WARNING:  * Debugger is active!
+2026-03-18 22:03:31,411 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:11:57,114 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:11:57,114 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:11:57,116 INFO:  * Restarting with stat
+2026-03-18 22:12:01,539 WARNING:  * Debugger is active!
+2026-03-18 22:12:01,556 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:12:34,043 INFO: 127.0.0.1 - - [18/Mar/2026 22:12:34] "HEAD /formats HTTP/1.1" 200 -
+2026-03-18 22:12:34,046 INFO: 127.0.0.1 - - [18/Mar/2026 22:12:34] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:14:10,845 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:14:10,845 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:14:10,850 INFO:  * Restarting with stat
+2026-03-18 22:14:18,231 WARNING:  * Debugger is active!
+2026-03-18 22:14:18,248 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:14:20,809 INFO: 127.0.0.1 - - [18/Mar/2026 22:14:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:14:20,812 INFO: 127.0.0.1 - - [18/Mar/2026 22:14:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:14:21,130 INFO: 127.0.0.1 - - [18/Mar/2026 22:14:21] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:15:56,860 INFO: 127.0.0.1 - - [18/Mar/2026 22:15:56] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:16:49,153 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:16:49,153 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:16:49,157 INFO:  * Restarting with stat
+2026-03-18 22:16:55,457 WARNING:  * Debugger is active!
+2026-03-18 22:16:55,482 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:16:58,311 INFO: 127.0.0.1 - - [18/Mar/2026 22:16:58] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:16:58,313 INFO: 127.0.0.1 - - [18/Mar/2026 22:16:58] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:16:58,623 INFO: 127.0.0.1 - - [18/Mar/2026 22:16:58] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:24:16,039 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 22:24:17,522 INFO:  * Restarting with stat
+2026-03-18 22:24:27,030 WARNING:  * Debugger is active!
+2026-03-18 22:24:27,073 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:25:56,367 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:25:56,368 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:25:56,369 INFO:  * Restarting with stat
+2026-03-18 22:26:01,650 WARNING:  * Debugger is active!
+2026-03-18 22:26:01,669 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:26:03,780 INFO: 127.0.0.1 - - [18/Mar/2026 22:26:03] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:26:04,096 INFO: 127.0.0.1 - - [18/Mar/2026 22:26:04] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:30:21,476 INFO: 127.0.0.1 - - [18/Mar/2026 22:30:21] "POST /convert HTTP/1.1" 200 -
+2026-03-18 22:32:28,840 INFO: 127.0.0.1 - - [18/Mar/2026 22:32:28] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:44:02,340 INFO: 127.0.0.1 - - [18/Mar/2026 22:44:02] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:44:02,589 INFO: 127.0.0.1 - - [18/Mar/2026 22:44:02] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:45:23,121 INFO: 127.0.0.1 - - [18/Mar/2026 22:45:23] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:45:23,373 INFO: 127.0.0.1 - - [18/Mar/2026 22:45:23] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:47:20,559 INFO: 127.0.0.1 - - [18/Mar/2026 22:47:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:47:20,829 INFO: 127.0.0.1 - - [18/Mar/2026 22:47:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:48:17,306 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:48:17,307 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:48:17,310 INFO:  * Restarting with stat
+2026-03-18 22:48:23,966 WARNING:  * Debugger is active!
+2026-03-18 22:48:23,986 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:48:26,753 INFO: 127.0.0.1 - - [18/Mar/2026 22:48:26] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:48:27,065 INFO: 127.0.0.1 - - [18/Mar/2026 22:48:27] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:48:27,370 INFO: 127.0.0.1 - - [18/Mar/2026 22:48:27] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:50:31,542 INFO: 127.0.0.1 - - [18/Mar/2026 22:50:31] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:50:31,808 INFO: 127.0.0.1 - - [18/Mar/2026 22:50:31] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:51:11,543 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:51:11,543 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:51:11,546 INFO:  * Restarting with stat
+2026-03-18 22:51:19,182 WARNING:  * Debugger is active!
+2026-03-18 22:51:19,209 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:51:21,474 INFO: 127.0.0.1 - - [18/Mar/2026 22:51:21] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:51:21,787 INFO: 127.0.0.1 - - [18/Mar/2026 22:51:21] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:51:22,098 INFO: 127.0.0.1 - - [18/Mar/2026 22:51:22] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:53:08,253 INFO: 127.0.0.1 - - [18/Mar/2026 22:53:08] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:53:08,514 INFO: 127.0.0.1 - - [18/Mar/2026 22:53:08] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:53:28,415 INFO: 127.0.0.1 - - [18/Mar/2026 22:53:28] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:53:28,731 INFO: 127.0.0.1 - - [18/Mar/2026 22:53:28] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:56:07,209 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:56:07,210 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:56:07,213 INFO:  * Restarting with stat
+2026-03-18 22:56:15,015 WARNING:  * Debugger is active!
+2026-03-18 22:56:15,049 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 22:56:18,042 INFO: 127.0.0.1 - - [18/Mar/2026 22:56:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:56:18,347 INFO: 127.0.0.1 - - [18/Mar/2026 22:56:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:56:18,654 INFO: 127.0.0.1 - - [18/Mar/2026 22:56:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:56:59,046 INFO: 127.0.0.1 - - [18/Mar/2026 22:56:59] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:56:59,048 INFO: 127.0.0.1 - - [18/Mar/2026 22:56:59] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:45,919 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:45] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:46,162 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:46] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:46,743 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:46] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:47,056 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:47] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:47,731 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:47] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:48,021 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:48] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:58:48,038 INFO: 127.0.0.1 - - [18/Mar/2026 22:58:48] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:01,399 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:01] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:01,703 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:01] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:02,343 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:02] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:02,598 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:02] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:02,697 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:02] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:03,003 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:03] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:10,745 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:10] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:10,994 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:10] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:21,406 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:21] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:21,932 INFO: 127.0.0.1 - - [18/Mar/2026 22:59:21] "GET /formats HTTP/1.1" 200 -
+2026-03-18 22:59:28,464 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 22:59:28,464 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 22:59:28,468 INFO:  * Restarting with stat
+2026-03-18 22:59:37,261 WARNING:  * Debugger is active!
+2026-03-18 22:59:37,297 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:00:34,297 INFO: 127.0.0.1 - - [18/Mar/2026 23:00:34] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:00:34,562 INFO: 127.0.0.1 - - [18/Mar/2026 23:00:34] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:01:19,605 INFO: 127.0.0.1 - - [18/Mar/2026 23:01:19] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:01:19,911 INFO: 127.0.0.1 - - [18/Mar/2026 23:01:19] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:02:20,302 INFO: 127.0.0.1 - - [18/Mar/2026 23:02:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:02:20,571 INFO: 127.0.0.1 - - [18/Mar/2026 23:02:20] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:09:18,257 INFO: 127.0.0.1 - - [18/Mar/2026 23:09:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:09:18,518 INFO: 127.0.0.1 - - [18/Mar/2026 23:09:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:09:53,675 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:09:54,690 INFO:  * Restarting with stat
+2026-03-18 23:09:54,857 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:09:56,135 INFO:  * Restarting with stat
+2026-03-18 23:10:01,738 WARNING:  * Debugger is active!
+2026-03-18 23:10:01,763 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:10:03,083 WARNING:  * Debugger is active!
+2026-03-18 23:10:03,115 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:19:06,506 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 23:19:06,507 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 23:19:06,510 INFO:  * Restarting with stat
+2026-03-18 23:19:11,551 INFO: 127.0.0.1 - - [18/Mar/2026 23:19:11] "HEAD /formats HTTP/1.1" 200 -
+2026-03-18 23:19:11,555 INFO: 127.0.0.1 - - [18/Mar/2026 23:19:11] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:19:14,244 WARNING:  * Debugger is active!
+2026-03-18 23:19:14,266 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:19:22,436 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:19:23,575 INFO:  * Restarting with stat
+2026-03-18 23:19:24,190 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:19:24,669 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:19:25,334 INFO:  * Restarting with stat
+2026-03-18 23:19:25,607 INFO:  * Restarting with stat
+2026-03-18 23:19:31,891 WARNING:  * Debugger is active!
+2026-03-18 23:19:31,930 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:19:33,339 WARNING:  * Debugger is active!
+2026-03-18 23:19:33,378 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:19:33,750 WARNING:  * Debugger is active!
+2026-03-18 23:19:33,789 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:20:18,112 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 23:20:18,112 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 23:20:18,114 INFO:  * Restarting with stat
+2026-03-18 23:20:25,596 WARNING:  * Debugger is active!
+2026-03-18 23:20:25,632 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:22:00,117 INFO: 127.0.0.1 - - [18/Mar/2026 23:22:00] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:22:00,158 INFO: 127.0.0.1 - - [18/Mar/2026 23:22:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-18 23:25:47,411 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 23:25:47,411 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 23:25:47,413 INFO:  * Restarting with stat
+2026-03-18 23:26:44,559 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 23:26:44,559 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 23:26:44,562 INFO:  * Restarting with stat
+2026-03-18 23:26:52,105 WARNING:  * Debugger is active!
+2026-03-18 23:26:52,134 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:27:53,182 INFO: 127.0.0.1 - - [18/Mar/2026 23:27:53] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:27:53,221 INFO: 127.0.0.1 - - [18/Mar/2026 23:27:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-18 23:29:18,413 INFO: 127.0.0.1 - - [18/Mar/2026 23:29:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:29:18,660 INFO: 127.0.0.1 - - [18/Mar/2026 23:29:18] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:29:33,744 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:29:34,555 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\alltoall\\server\\app.py', reloading
+2026-03-18 23:29:34,947 INFO:  * Restarting with stat
+2026-03-18 23:29:35,613 INFO:  * Restarting with stat
+2026-03-18 23:29:42,417 WARNING:  * Debugger is active!
+2026-03-18 23:29:42,450 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:29:42,819 WARNING:  * Debugger is active!
+2026-03-18 23:29:42,856 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:31:06,665 INFO: 127.0.0.1 - - [18/Mar/2026 23:31:06] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:31:06,982 INFO: 127.0.0.1 - - [18/Mar/2026 23:31:06] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:31:12,893 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-18 23:31:12,893 INFO: [33mPress CTRL+C to quit[0m
+2026-03-18 23:31:12,896 INFO:  * Restarting with stat
+2026-03-18 23:31:21,263 WARNING:  * Debugger is active!
+2026-03-18 23:31:21,296 INFO:  * Debugger PIN: 115-820-551
+2026-03-18 23:31:38,971 INFO: 127.0.0.1 - - [18/Mar/2026 23:31:38] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:31:39,232 INFO: 127.0.0.1 - - [18/Mar/2026 23:31:39] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:31:51,135 INFO: 127.0.0.1 - - [18/Mar/2026 23:31:51] "GET /formats HTTP/1.1" 200 -
+2026-03-18 23:33:34,802 INFO: 127.0.0.1 - - [18/Mar/2026 23:33:34] "POST /convert HTTP/1.1" 200 -
+2026-03-19 22:19:01,201 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-19 22:19:01,202 INFO: [33mPress CTRL+C to quit[0m
+2026-03-19 22:19:01,204 INFO:  * Restarting with stat
+2026-03-19 22:19:06,659 WARNING:  * Debugger is active!
+2026-03-19 22:19:06,680 INFO:  * Debugger PIN: 115-820-551
+2026-03-19 22:28:57,680 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-19 22:28:57,680 INFO: [33mPress CTRL+C to quit[0m
+2026-03-19 22:28:57,681 INFO:  * Restarting with stat
+2026-03-19 22:29:02,928 WARNING:  * Debugger is active!
+2026-03-19 22:29:02,946 INFO:  * Debugger PIN: 115-820-551
+2026-03-19 22:29:05,366 INFO: 127.0.0.1 - - [19/Mar/2026 22:29:05] "GET /formats HTTP/1.1" 200 -
+2026-03-19 22:29:05,683 INFO: 127.0.0.1 - - [19/Mar/2026 22:29:05] "GET /formats HTTP/1.1" 200 -
+2026-03-19 22:30:57,922 INFO: 127.0.0.1 - - [19/Mar/2026 22:30:57] "POST /convert HTTP/1.1" 200 -
+2026-03-19 22:34:40,847 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\系统与网络\\alltoall\\server\\converters\\whisper_converter.py', reloading
+2026-03-19 22:34:41,725 INFO:  * Restarting with stat
+2026-03-19 22:34:46,391 WARNING:  * Debugger is active!
+2026-03-19 22:34:46,408 INFO:  * Debugger PIN: 115-820-551
+2026-03-19 22:40:39,484 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-19 22:40:39,484 INFO: [33mPress CTRL+C to quit[0m
+2026-03-19 22:40:39,487 INFO:  * Restarting with stat
+2026-03-19 22:40:44,465 WARNING:  * Debugger is active!
+2026-03-19 22:40:44,484 INFO:  * Debugger PIN: 115-820-551
+2026-03-19 22:40:46,145 INFO: 127.0.0.1 - - [19/Mar/2026 22:40:46] "GET /formats HTTP/1.1" 200 -
+2026-03-19 22:40:46,449 INFO: 127.0.0.1 - - [19/Mar/2026 22:40:46] "GET /formats HTTP/1.1" 200 -
+2026-03-19 22:40:46,753 INFO: 127.0.0.1 - - [19/Mar/2026 22:40:46] "GET /formats HTTP/1.1" 200 -
+2026-03-19 22:42:18,379 INFO: 127.0.0.1 - - [19/Mar/2026 22:42:18] "POST /convert HTTP/1.1" 200 -
+2026-03-19 22:43:52,329 INFO:  * Detected change in 'C:\\Users\\Lenovo\\Desktop\\系统与网络\\alltoall\\server\\converters\\whisper_converter.py', reloading
+2026-03-19 22:43:53,161 INFO:  * Restarting with stat
+2026-03-19 22:43:57,920 WARNING:  * Debugger is active!
+2026-03-19 22:43:57,945 INFO:  * Debugger PIN: 115-820-551
+2026-03-19 22:44:00,531 INFO: 127.0.0.1 - - [19/Mar/2026 22:44:00] "GET /formats HTTP/1.1" 200 -

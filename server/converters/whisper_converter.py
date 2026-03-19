@@ -2,6 +2,7 @@ import os
 import whisper
 import docx
 import fitz
+import torch
 from .base import BaseConverter
 
 class WhisperConverter(BaseConverter):
@@ -19,29 +20,75 @@ class WhisperConverter(BaseConverter):
     def output_extension(self):
         return self._target_ext
 
-    def _get_model(self):
+    def _get_model(self, device_pref="auto"):
+        target_device = "cpu"
+        if device_pref in ["auto", "gpu"]:
+            if torch.cuda.is_available():
+                target_device = "cuda"
+            else:
+                try:
+                    import torch_directml
+                    if torch_directml.is_available():
+                        target_device = torch_directml.device()
+                except Exception as e:
+                    print(f"DirectML initialization failed: {e}")
+
+        need_reload = False
         if self._model is None:
-            # 首次调用时加载模型
-            print(f"Loading Whisper model: {self._model_size}...")
-            self._model = whisper.load_model(self._model_size)
+            need_reload = True
+        else:
+            current_device_str = str(next(self._model.parameters()).device)
+            target_device_str = str(target_device)
+            if target_device_str == "cuda" and "cuda" not in current_device_str:
+                need_reload = True
+            elif target_device_str == "cpu" and "cpu" not in current_device_str:
+                need_reload = True
+            elif "dml" in target_device_str and "dml" not in current_device_str:
+                need_reload = True
+            elif "privateuseone" in target_device_str and "privateuseone" not in current_device_str:
+                need_reload = True
+
+        if need_reload:
+            print(f"Loading Whisper model: {self._model_size} on {target_device}...")
+            self._model = whisper.load_model(self._model_size, device=target_device)
         return self._model
 
-    def convert(self, file_path):
+    def convert(self, file_path, **kwargs):
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
 
         try:
-            model = self._get_model()
+            device_pref = kwargs.get('device_pref', 'auto')
+            model = self._get_model(device_pref=device_pref)
             
             # 执行识别
-            # fp16=False 可以在没有 GPU 的机器上更稳定运行
-            # initial_prompt 引导模型输出简体中文
-            result = model.transcribe(
-                file_path, 
-                fp16=False, 
-                language="zh",
-                initial_prompt="以下是普通话的简体中文。"
-            )
+            # 自动检测是否使用 GPU 以决定 fp16 参数
+            use_fp16 = False
+            device_str = str(next(model.parameters()).device)
+            if "cuda" in device_str:
+                use_fp16 = True
+            
+            try:
+                # initial_prompt 引导模型输出简体中文
+                result = model.transcribe(
+                    file_path, 
+                    fp16=use_fp16, 
+                    language="zh",
+                    initial_prompt="以下是普通话的简体中文。"
+                )
+            except Exception as e:
+                if "dml" in device_str or "privateuseone" in device_str:
+                    print(f"GPU (DirectML) transcription failed: {e}. Falling back to CPU...")
+                    self._model = whisper.load_model(self._model_size, device="cpu")
+                    model = self._model
+                    result = model.transcribe(
+                        file_path, 
+                        fp16=False, 
+                        language="zh",
+                        initial_prompt="以下是普通话的简体中文。"
+                    )
+                else:
+                    raise e
             text = result["text"].strip()
             
             # 根据目标后缀返回内容

@@ -108,6 +108,7 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [isFetching, setIsFetching] = useState(true);
   const [systemStatus, setSystemStatus] = useState({ ready: true, missing_deps: [] });
+  const [devicePref, setDevicePref] = useState('auto');
 
   const t = (key, params = {}) => {
     let text = TRANSLATIONS[language][key] || key;
@@ -311,6 +312,7 @@ function App() {
         formData.append('file', file);
         formData.append('target_format', targetFormat);
         formData.append('keep_name', keepName.toString());
+        formData.append('device_pref', devicePref);
 
         const response = await axios.post(`${API_BASE_URL}/convert`, formData, {
           responseType: 'blob',
@@ -621,9 +623,27 @@ function App() {
                   <div className="toggle-switch"></div>
                   <span className="toggle-label">{t('keepOriginalName')}</span>
                 </div>
-                <div className="selection-divider" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem' }}>
-                  <Settings2 size={14} />
-                  <span>{t('advanced')}</span>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', fontSize: '0.85rem' }}>
+                    <Settings2 size={14} color="var(--text-secondary)" />
+                    <span style={{ color: 'var(--text-secondary)' }}>加速模式:</span>
+                    <select 
+                      value={devicePref} 
+                      onChange={(e) => setDevicePref(e.target.value)}
+                      style={{ 
+                        padding: '4px 8px', 
+                        borderRadius: '6px', 
+                        border: '1px solid var(--border-color)', 
+                        background: 'var(--bg-secondary)', 
+                        color: 'var(--text-primary)',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="auto">自动选择</option>
+                      <option value="cpu">强制 CPU</option>
+                      <option value="gpu">强制 GPU</option>
+                    </select>
                 </div>
               </div>
             </motion.div>
