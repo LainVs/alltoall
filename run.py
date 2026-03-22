@@ -5,6 +5,7 @@ import webbrowser
 import os
 import sys
 import shutil
+import importlib.util
 
 def is_port_open(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -21,6 +22,10 @@ def check_dependencies():
     # Check for pandoc
     if not shutil.which("pandoc"):
         missing.append("pandoc (用于文档格式转换)")
+        
+    # Check for pdf2docx (Python package)
+    if importlib.util.find_spec("pdf2docx") is None:
+        missing.append("pdf2docx (用于 PDF 转 Word)")
         
     return missing
 

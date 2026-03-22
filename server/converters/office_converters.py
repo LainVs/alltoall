@@ -5,6 +5,36 @@ import fitz  # PyMuPDF
 import subprocess
 from .base import BaseConverter
 
+
+
+class PdfToWordConverter(BaseConverter):
+    @property
+    def supported_extension(self):
+        return ".pdf"
+
+    @property
+    def output_extension(self):
+        return ".docx"
+
+    def convert(self, file_path):
+        # 使用 pdf2docx 进行转换
+        docx_file = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
+        docx_path = docx_file.name
+        docx_file.close()
+        
+        try:
+            from pdf2docx import Converter
+            cv = Converter(file_path)
+            cv.convert(docx_path, start=0, end=None)
+            cv.close()
+            
+            with open(docx_path, "rb") as f:
+                content = f.read()
+            return content, self.output_extension
+        finally:
+            if os.path.exists(docx_path):
+                os.remove(docx_path)
+
 class ExcelConverter(BaseConverter):
     def __init__(self, source_ext, target_ext):
         self._source_ext = source_ext

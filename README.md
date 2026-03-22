@@ -15,7 +15,7 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
   - **封面提取**: 从视频文件中自动提取第一帧作为 JPEG 封面图。
 - **办公与数据增强**: 
   - **图片转换**: 支持图片 (.jpg, .png, .webp, .bmp) ➔ PDF (.pdf) 以及 PDF 转图片 (.png, .jpg)。
-- **PDF 提取**: PDF ➔ 提取文本 (.txt)。
+- **PDF 处理**: PDF ➔ Word (.docx), 图片 (.png, .jpg), 提取文本 (.txt)。
   - **Word 转 PDF**: 高质量 Word (.docx) ➔ PDF 转换。
   - **表格互转**: Excel (.xlsx) ↔ CSV 完美互转。
   - **数据导出**: 支持 JSON ➔ Excel (.xlsx) 或 CSV。
@@ -30,7 +30,7 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 - **Word (.docx)** ➔ PDF, Markdown (.md)
 - **Excel (.xlsx)** ↔ CSV
 - **图片 (.jpg, .png, .webp, .bmp)** ➔ PDF
-- **PDF** ➔ PNG, JPG, Text (.txt)
+- **PDF** ➔ Word (.docx), PNG, JPG, Text (.txt)
 - **JSON** ➔ Excel (.xlsx), CSV
 - **Jupyter Notebook (.ipynb)** ➔ HTML, Markdown (.md)
 

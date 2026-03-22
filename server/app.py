@@ -6,7 +6,7 @@ import io
 from converters.ipynb_to_md import IpynbToMdConverter
 from converters.pandoc_converter import PandocConverter
 from converters.whisper_converter import WhisperConverter
-from converters.office_converters import ExcelConverter, DocxToPdfConverter
+from converters.office_converters import ExcelConverter, DocxToPdfConverter, PdfToWordConverter
 from converters.video_to_gif import VideoToGifConverter
 from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
 from converters.data_converters import JsonConverter
@@ -37,6 +37,7 @@ whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 
 # 实例化图片转换器
 img_to_pdf = ImageToPdfConverter()
+pdf_to_word = PdfToWordConverter()
 
 converters_map = {
     ".ipynb": {
@@ -54,7 +55,8 @@ converters_map = {
     ".pdf": {
         ".png": PdfToImageConverter(target_ext=".png"),
         ".jpg": PdfToImageConverter(target_ext=".jpg"),
-        ".txt": PdfToTextConverter()
+        ".txt": PdfToTextConverter(),
+        ".docx": pdf_to_word
     },
     ".json": {
         ".xlsx": JsonConverter(target_ext=".xlsx"),
