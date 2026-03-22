@@ -26,7 +26,7 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 ## 支持的转换格式
 
 ### 文档、表格与数据
-- **Markdown (.md)** ↔ Word (.docx), HTML
+- **Markdown (.md)** ↔ Word (.docx), HTML, PDF
 - **Word (.docx)** ➔ PDF, Markdown (.md)
 - **Excel (.xlsx)** ↔ CSV
 - **图片 (.jpg, .png, .webp, .bmp)** ➔ PDF

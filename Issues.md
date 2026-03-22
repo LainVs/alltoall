@@ -22,4 +22,5 @@
 22.在高级设置中增加手动切换 CPU/GPU 加速的选择，并加入了 Intel 显卡/DirectML 崩溃时的自动切回 CPU 的安全熔断保护机制
 23. 增加图片转 PDF 功能 (JPG, PNG, WebP, BMP ➔ PDF) ✅
 24. 增加 PDF 转 Word 功能 (.pdf ➔ .docx) ✅
-25. 计划增加更多转换：苹果 HEIC ➔ JPG、音视频压缩、OCR 图片转文字等 🚧
+25. 增加 Markdown 转 PDF 功能 (.md ➔ .pdf) ✅
+26. 计划增加更多转换：苹果 HEIC ➔ JPG、音视频压缩、OCR 图片转文字等 🚧

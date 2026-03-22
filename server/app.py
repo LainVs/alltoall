@@ -4,7 +4,7 @@ import os
 import tempfile
 import io
 from converters.ipynb_to_md import IpynbToMdConverter
-from converters.pandoc_converter import PandocConverter
+from converters.pandoc_converter import PandocConverter, MdToPdfConverter
 from converters.whisper_converter import WhisperConverter
 from converters.office_converters import ExcelConverter, DocxToPdfConverter, PdfToWordConverter
 from converters.video_to_gif import VideoToGifConverter
@@ -46,7 +46,8 @@ converters_map = {
     },
     ".md": {
         ".docx": PandocConverter(".md", ".docx"),
-        ".html": PandocConverter(".md", ".html")
+        ".html": PandocConverter(".md", ".html"),
+        ".pdf": MdToPdfConverter()
     },
     ".docx": {
         ".md": PandocConverter(".docx", ".md"),
