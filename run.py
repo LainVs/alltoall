@@ -11,6 +11,18 @@ def is_port_open(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('127.0.0.1', port)) == 0
 
+def check_dependencies():
+    """Checks for required system tools and packages."""
+    missing = []
+    
+    # Check for ffmpeg
+    if not shutil.which("ffmpeg"):
+        missing.append("ffmpeg (用于视频和音频转换)")
+        
+    # Check for pandoc
+    if not shutil.which("pandoc"):
+        missing.append("pandoc (用于文档格式转换)")
+        
     # Check for pdf2docx (Python package)
     if importlib.util.find_spec("pdf2docx") is None:
         missing.append("pdf2docx")
