@@ -27,6 +27,14 @@ def check_dependencies():
     if importlib.util.find_spec("pdf2docx") is None:
         missing.append("pdf2docx (用于 PDF 转 Word)")
         
+    # Check for pillow-heif (Python package)
+    if importlib.util.find_spec("pillow_heif") is None:
+        missing.append("pillow-heif (用于 HEIC 图片转换)")
+        
+    # Check for realesrgan (Python package)
+    if importlib.util.find_spec("realesrgan") is None:
+        missing.append("realesrgan (用于 AI 图片超分)")
+        
     return missing
 
 def run():

@@ -11,7 +11,7 @@ from converters.video_to_gif import VideoToGifConverter
 from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
 from converters.data_converters import JsonConverter
 from converters.ipynb_converters import IpynbToHtmlConverter
-from converters.image_converters import ImageToPdfConverter
+from converters.image_converters import ImageToPdfConverter, HeicToJpgConverter
 from converters.ffmpeg_converter import FFmpegConverter, VideoToImageConverter
 
 import logging
@@ -37,6 +37,8 @@ whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 
 # 实例化图片转换器
 img_to_pdf = ImageToPdfConverter()
+heic_to_jpg = HeicToJpgConverter(target_ext=".jpg")
+heic_to_png = HeicToJpgConverter(target_ext=".png")
 pdf_to_word = PdfToWordConverter()
 
 converters_map = {
@@ -148,6 +150,10 @@ converters_map = {
     },
     ".bmp": {
         ".pdf": img_to_pdf
+    },
+    ".heic": {
+        ".jpg": heic_to_jpg,
+        ".png": heic_to_png
     }
 }
 

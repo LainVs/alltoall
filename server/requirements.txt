@@ -4,6 +4,11 @@ nbconvert
 nbformat
 openai-whisper
 python-docx
+Pillow
+pillow-heif
+realesrgan
+basicsr
+
 pymupdf
 pandas
 openpyxl
