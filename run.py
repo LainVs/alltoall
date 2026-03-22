@@ -11,31 +11,38 @@ def is_port_open(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('127.0.0.1', port)) == 0
 
-def check_dependencies():
-    """Checks for required system tools and packages."""
-    missing = []
-    
-    # Check for ffmpeg
-    if not shutil.which("ffmpeg"):
-        missing.append("ffmpeg (用于视频和音频转换)")
-        
-    # Check for pandoc
-    if not shutil.which("pandoc"):
-        missing.append("pandoc (用于文档格式转换)")
-        
     # Check for pdf2docx (Python package)
     if importlib.util.find_spec("pdf2docx") is None:
-        missing.append("pdf2docx (用于 PDF 转 Word)")
+        missing.append("pdf2docx")
         
     # Check for pillow-heif (Python package)
     if importlib.util.find_spec("pillow_heif") is None:
-        missing.append("pillow-heif (用于 HEIC 图片转换)")
+        missing.append("pillow-heif")
         
     # Check for realesrgan (Python package)
     if importlib.util.find_spec("realesrgan") is None:
-        missing.append("realesrgan (用于 AI 图片超分)")
+        missing.append("realesrgan")
         
     return missing
+
+def install_dependencies(missing_list):
+    """Automatically installs missing Python dependencies."""
+    python_deps = [dep for dep in missing_list if dep in ["pdf2docx", "pillow-heif", "realesrgan", "basicsr", "opencv-python"]]
+    
+    if not python_deps:
+        return
+        
+    print(f"\n📦 检测到缺失 Python 依赖: {', '.join(python_deps)}")
+    print("🚀 正在尝试自动安装...")
+    
+    try:
+        # 使用当前 Python 环境进行 pip 安装
+        subprocess.check_call([sys.executable, "-m", "pip", "install"] + python_deps)
+        print("✅ 依赖安装成功！\n")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ 自动安装失败: {e}. 请手动运行: pip install {' '.join(python_deps)}")
+    except Exception as e:
+        print(f"⚠️ 发生意外错误: {str(e)}")
 
 def run():
     root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -54,9 +61,16 @@ def run():
         # Pass missing dependencies as env var if any
         env = os.environ.copy()
         missing = check_dependencies()
+        
+        # 尝试自动安装缺失的 Python 依赖
+        install_dependencies(missing)
+        
+        # 再次检查环境（安装后）
+        missing = check_dependencies()
+        
         if missing:
             env["MISSING_DEPS"] = "|".join(missing)
-            print(f"⚠️ 检测到缺失依赖: {', '.join(missing)}")
+            print(f"⚠️ 启动提示: 仍有部分组件不可用: {', '.join(missing)}")
         
         backend_proc = subprocess.Popen(
             [sys.executable, "app.py"],
