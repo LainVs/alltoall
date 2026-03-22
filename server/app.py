@@ -11,7 +11,7 @@ from converters.video_to_gif import VideoToGifConverter
 from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
 from converters.data_converters import JsonConverter
 from converters.ipynb_converters import IpynbToHtmlConverter
-from converters.image_converters import ImageToPdfConverter, HeicToJpgConverter
+from converters.image_converters import ImageToPdfConverter, HeicToJpgConverter, ImageUpscaleConverter
 from converters.ffmpeg_converter import FFmpegConverter, VideoToImageConverter
 
 import logging
@@ -39,6 +39,8 @@ whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 img_to_pdf = ImageToPdfConverter()
 heic_to_jpg = HeicToJpgConverter(target_ext=".jpg")
 heic_to_png = HeicToJpgConverter(target_ext=".png")
+img_upscale_x2 = ImageUpscaleConverter(scale=2)
+img_upscale_x4 = ImageUpscaleConverter(scale=4)
 pdf_to_word = PdfToWordConverter()
 
 converters_map = {
@@ -137,23 +139,33 @@ converters_map = {
         ".jpg": VideoToImageConverter(".webm")
     },
     ".jpg": {
-        ".pdf": img_to_pdf
+        ".pdf": img_to_pdf,
+        " AI 放大 x2": img_upscale_x2,
+        " AI 放大 x4": img_upscale_x4
     },
     ".jpeg": {
-        ".pdf": img_to_pdf
+        ".pdf": img_to_pdf,
+        " AI 放大 x2": img_upscale_x2,
+        " AI 放大 x4": img_upscale_x4
     },
     ".png": {
-        ".pdf": img_to_pdf
+        ".pdf": img_to_pdf,
+        " AI 放大 x2": img_upscale_x2,
+        " AI 放大 x4": img_upscale_x4
     },
     ".webp": {
         ".pdf": img_to_pdf
     },
     ".bmp": {
-        ".pdf": img_to_pdf
+        ".pdf": img_to_pdf,
+        " AI 放大 x2": img_upscale_x2,
+        " AI 放大 x4": img_upscale_x4
     },
     ".heic": {
         ".jpg": heic_to_jpg,
-        ".png": heic_to_png
+        ".png": heic_to_png,
+        " AI 放大 x2": img_upscale_x2,
+        " AI 放大 x4": img_upscale_x4
     }
 }
 

@@ -23,4 +23,6 @@
 23. 增加图片转 PDF 功能 (JPG, PNG, WebP, BMP ➔ PDF) ✅
 24. 增加 PDF 转 Word 功能 (.pdf ➔ .docx) ✅
 25. 增加 Markdown 转 PDF 功能 (.md ➔ .pdf) ✅
-26. 计划增加更多转换：苹果 HEIC ➔ JPG、音视频压缩、OCR 图片转文字等 🚧
+26. 增加 HEIC ➔ JPG/PNG 转换功能 (苹果党必备) ✅
+27. 增加 AI 图片超分/修复功能 (Real-ESRGAN x2, x4) ✅
+28. 计划增加更多转换：音视频压缩、OCR 图片转文字等 🚧
