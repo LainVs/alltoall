@@ -14,7 +14,8 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
   - **GIF 制作**: 支持将视频 (.mp4, .mkv, .mov, .avi, .flv, .wmv, .webm) 转换为高质量的 GIF 动图。
   - **封面提取**: 从视频文件中自动提取第一帧作为 JPEG 封面图。
 - **办公与数据增强**: 
-  - **PDF 转换**: 支持 PDF 转图片 (.png, .jpg) 以及 PDF 提取文本 (.txt)。
+  - **图片转换**: 支持图片 (.jpg, .png, .webp, .bmp) ➔ PDF (.pdf) 以及 PDF 转图片 (.png, .jpg)。
+- **PDF 提取**: PDF ➔ 提取文本 (.txt)。
   - **Word 转 PDF**: 高质量 Word (.docx) ➔ PDF 转换。
   - **表格互转**: Excel (.xlsx) ↔ CSV 完美互转。
   - **数据导出**: 支持 JSON ➔ Excel (.xlsx) 或 CSV。
@@ -28,6 +29,7 @@ AllToAll 是一款极简、专业且完全本地化的文件转换工具。
 - **Markdown (.md)** ↔ Word (.docx), HTML
 - **Word (.docx)** ➔ PDF, Markdown (.md)
 - **Excel (.xlsx)** ↔ CSV
+- **图片 (.jpg, .png, .webp, .bmp)** ➔ PDF
 - **PDF** ➔ PNG, JPG, Text (.txt)
 - **JSON** ➔ Excel (.xlsx), CSV
 - **Jupyter Notebook (.ipynb)** ➔ HTML, Markdown (.md)

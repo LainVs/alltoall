@@ -11,6 +11,7 @@ from converters.video_to_gif import VideoToGifConverter
 from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
 from converters.data_converters import JsonConverter
 from converters.ipynb_converters import IpynbToHtmlConverter
+from converters.image_converters import ImageToPdfConverter
 from converters.ffmpeg_converter import FFmpegConverter, VideoToImageConverter
 
 import logging
@@ -33,6 +34,9 @@ whisper_converter_md = WhisperConverter("", ".md", model_size="small")
 whisper_converter_txt = WhisperConverter("", ".txt", model_size="small")
 whisper_converter_docx = WhisperConverter("", ".docx", model_size="small")
 whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
+
+# 实例化图片转换器
+img_to_pdf = ImageToPdfConverter()
 
 converters_map = {
     ".ipynb": {
@@ -126,6 +130,21 @@ converters_map = {
         ".mp3": FFmpegConverter(".webm", ".mp3"),
         ".gif": VideoToGifConverter(".webm"),
         ".jpg": VideoToImageConverter(".webm")
+    },
+    ".jpg": {
+        ".pdf": img_to_pdf
+    },
+    ".jpeg": {
+        ".pdf": img_to_pdf
+    },
+    ".png": {
+        ".pdf": img_to_pdf
+    },
+    ".webp": {
+        ".pdf": img_to_pdf
+    },
+    ".bmp": {
+        ".pdf": img_to_pdf
     }
 }
 
