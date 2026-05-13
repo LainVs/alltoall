@@ -8,7 +8,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000';
+// 开发模式 (Vite:5173) 请求后端 5000；打包模式 (Flask 提供前端) 用相对路径
+const API_BASE_URL = window.location.port === '5173' ? 'http://localhost:5000' : '';
 
 const TRANSLATIONS = {
   zh: {
@@ -83,7 +84,7 @@ const TRANSLATIONS = {
 
 const CATEGORIES = {
   catVideo: ['gif', 'mp4', 'mkv', 'mov', 'avi', 'flv', 'wmv', 'webm'],
-  catAudio: ['mp3', 'wav', 'aac'],
+  catAudio: ['mp3', 'wav', 'aac', 'flac', 'ogg', 'wma'],
   catDoc: ['docx', 'pdf', 'md', 'html', 'txt'],
   catImage: ['png', 'jpg'],
   catData: ['xlsx', 'csv', 'json'],
@@ -256,6 +257,17 @@ function App() {
 
     return [...new Set(intersection)].sort();
   }, [files, supportedFormats]);
+
+  // 当可用格式变更时，如果当前选中的目标格式不再可用，自动重置
+  useEffect(() => {
+    if (targetFormat && availableTargetFormats.length > 0 && !availableTargetFormats.includes(targetFormat)) {
+      setTargetFormat('');
+    }
+    // 如果文件被清空，也重置目标格式
+    if (files.length === 0) {
+      setTargetFormat('');
+    }
+  }, [availableTargetFormats, files.length]);
 
   // 搜索和分类过滤后的格式
   const filteredFormats = useMemo(() => {

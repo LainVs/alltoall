@@ -11,8 +11,32 @@ from converters.video_to_gif import VideoToGifConverter
 from converters.pdf_converters import PdfToImageConverter, PdfToTextConverter
 from converters.data_converters import JsonConverter
 from converters.ipynb_converters import IpynbToHtmlConverter
-from converters.image_converters import ImageToPdfConverter, HeicToJpgConverter, ImageUpscaleConverter
+from converters.image_converters import ImageToPdfConverter
 from converters.ffmpeg_converter import FFmpegConverter, VideoToImageConverter
+
+# 可选依赖：HEIC 转换
+HEIC_AVAILABLE = False
+try:
+    from converters.image_converters import HeicToJpgConverter
+    import importlib.util
+    if importlib.util.find_spec("pillow_heif") is not None:
+        HEIC_AVAILABLE = True
+    else:
+        print("提示: pillow_heif 未安装，HEIC 转换功能不可用")
+except ImportError:
+    print("提示: pillow_heif 未安装，HEIC 转换功能不可用")
+
+# 可选依赖：AI 图片超分
+UPSCALE_AVAILABLE = False
+try:
+    from converters.image_converters import ImageUpscaleConverter
+    import importlib.util
+    if importlib.util.find_spec("realesrgan") is not None and importlib.util.find_spec("basicsr") is not None:
+        UPSCALE_AVAILABLE = True
+    else:
+        print("提示: realesrgan/basicsr 未安装，AI 图片超分功能不可用")
+except ImportError:
+    print("提示: realesrgan/basicsr 未安装，AI 图片超分功能不可用")
 
 import logging
 
@@ -24,7 +48,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+# 检查是否有预构建的前端静态文件
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+if os.path.exists(static_dir):
+    app = Flask(__name__, static_folder='static', static_url_path='')
+else:
+    app = Flask(__name__)
 CORS(app)
 
 # 注册转换器
@@ -37,11 +66,21 @@ whisper_converter_pdf = WhisperConverter("", ".pdf", model_size="small")
 
 # 实例化图片转换器
 img_to_pdf = ImageToPdfConverter()
-heic_to_jpg = HeicToJpgConverter(target_ext=".jpg")
-heic_to_png = HeicToJpgConverter(target_ext=".png")
-img_upscale_x2 = ImageUpscaleConverter(scale=2)
-img_upscale_x4 = ImageUpscaleConverter(scale=4)
 pdf_to_word = PdfToWordConverter()
+
+# 可选转换器（依赖可能不存在）
+heic_to_jpg = None
+heic_to_png = None
+img_upscale_x2 = None
+img_upscale_x4 = None
+
+if HEIC_AVAILABLE:
+    heic_to_jpg = HeicToJpgConverter(target_ext=".jpg")
+    heic_to_png = HeicToJpgConverter(target_ext=".png")
+
+if UPSCALE_AVAILABLE:
+    img_upscale_x2 = ImageUpscaleConverter(scale=2)
+    img_upscale_x4 = ImageUpscaleConverter(scale=4)
 
 converters_map = {
     ".ipynb": {
@@ -101,6 +140,38 @@ converters_map = {
         ".docx": whisper_converter_docx,
         ".pdf": whisper_converter_pdf
     },
+    ".aac": {
+        ".mp3": FFmpegConverter(".aac", ".mp3"),
+        ".wav": FFmpegConverter(".aac", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
+    },
+    ".flac": {
+        ".mp3": FFmpegConverter(".flac", ".mp3"),
+        ".wav": FFmpegConverter(".flac", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
+    },
+    ".ogg": {
+        ".mp3": FFmpegConverter(".ogg", ".mp3"),
+        ".wav": FFmpegConverter(".ogg", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
+    },
+    ".wma": {
+        ".mp3": FFmpegConverter(".wma", ".mp3"),
+        ".wav": FFmpegConverter(".wma", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf
+    },
     ".mkv": {
         ".mp3": FFmpegConverter(".mkv", ".mp3"),
         ".wav": FFmpegConverter(".mkv", ".wav"),
@@ -113,6 +184,9 @@ converters_map = {
     },
     ".mov": {
         ".mp3": FFmpegConverter(".mov", ".mp3"),
+        ".wav": FFmpegConverter(".mov", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
         ".docx": whisper_converter_docx,
         ".pdf": whisper_converter_pdf,
         ".gif": VideoToGifConverter(".mov"),
@@ -120,54 +194,76 @@ converters_map = {
     },
     ".avi": {
         ".mp3": FFmpegConverter(".avi", ".mp3"),
+        ".wav": FFmpegConverter(".avi", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf,
         ".gif": VideoToGifConverter(".avi"),
         ".jpg": VideoToImageConverter(".avi")
     },
     ".flv": {
         ".mp3": FFmpegConverter(".flv", ".mp3"),
+        ".wav": FFmpegConverter(".flv", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf,
         ".gif": VideoToGifConverter(".flv"),
         ".jpg": VideoToImageConverter(".flv")
     },
     ".wmv": {
         ".mp3": FFmpegConverter(".wmv", ".mp3"),
+        ".wav": FFmpegConverter(".wmv", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf,
         ".gif": VideoToGifConverter(".wmv"),
         ".jpg": VideoToImageConverter(".wmv")
     },
     ".webm": {
         ".mp3": FFmpegConverter(".webm", ".mp3"),
+        ".wav": FFmpegConverter(".webm", ".wav"),
+        ".md": whisper_converter_md,
+        ".txt": whisper_converter_txt,
+        ".docx": whisper_converter_docx,
+        ".pdf": whisper_converter_pdf,
         ".gif": VideoToGifConverter(".webm"),
         ".jpg": VideoToImageConverter(".webm")
     },
     ".jpg": {
         ".pdf": img_to_pdf,
-        " AI 放大 x2": img_upscale_x2,
-        " AI 放大 x4": img_upscale_x4
     },
     ".jpeg": {
         ".pdf": img_to_pdf,
-        " AI 放大 x2": img_upscale_x2,
-        " AI 放大 x4": img_upscale_x4
     },
     ".png": {
         ".pdf": img_to_pdf,
-        " AI 放大 x2": img_upscale_x2,
-        " AI 放大 x4": img_upscale_x4
     },
     ".webp": {
         ".pdf": img_to_pdf
     },
     ".bmp": {
         ".pdf": img_to_pdf,
-        " AI 放大 x2": img_upscale_x2,
-        " AI 放大 x4": img_upscale_x4
     },
-    ".heic": {
+}
+
+# 动态注册可选转换器
+if UPSCALE_AVAILABLE and img_upscale_x2 and img_upscale_x4:
+    for ext in [".jpg", ".jpeg", ".png", ".bmp"]:
+        if ext in converters_map:
+            converters_map[ext][" AI 放大 x2"] = img_upscale_x2
+            converters_map[ext][" AI 放大 x4"] = img_upscale_x4
+
+if HEIC_AVAILABLE and heic_to_jpg and heic_to_png:
+    converters_map[".heic"] = {
         ".jpg": heic_to_jpg,
         ".png": heic_to_png,
-        " AI 放大 x2": img_upscale_x2,
-        " AI 放大 x4": img_upscale_x4
     }
-}
+    if UPSCALE_AVAILABLE and img_upscale_x2 and img_upscale_x4:
+        converters_map[".heic"][" AI 放大 x2"] = img_upscale_x2
+        converters_map[".heic"][" AI 放大 x4"] = img_upscale_x4
 
 @app.route('/formats', methods=['GET'])
 def get_formats():
@@ -256,5 +352,23 @@ def convert_file():
             except:
                 pass
 
+# 前端路由：当有构建好的静态文件时，Flask 直接提供前端页面
+@app.route('/')
+def serve_frontend():
+    if app.static_folder and os.path.exists(os.path.join(app.static_folder, 'index.html')):
+        return app.send_static_file('index.html')
+    return '<h1>Frontend not built. Run: cd client && npm run build</h1>', 404
+
+# 捕获所有前端路由（SPA 支持）
+@app.route('/<path:path>')
+def catch_all(path):
+    if app.static_folder:
+        file_path = os.path.join(app.static_folder, path)
+        if os.path.exists(file_path):
+            return app.send_static_file(path)
+    return serve_frontend()
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    import sys
+    debug = '--debug' in sys.argv
+    app.run(debug=debug, port=5000)

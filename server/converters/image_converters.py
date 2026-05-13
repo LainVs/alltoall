@@ -1,7 +1,6 @@
 import fitz  # PyMuPDF
 import os
 from PIL import Image
-import pillow_heif
 from .base import BaseConverter
 
 class ImageToPdfConverter(BaseConverter):
@@ -34,8 +33,12 @@ class HeicToJpgConverter(BaseConverter):
     def __init__(self, source_ext=".heic", target_ext=".jpg"):
         self._source_ext = source_ext
         self._target_ext = target_ext
-        # Register HEIF opener for Pillow
-        pillow_heif.register_heif_opener()
+        # Register HEIF opener for Pillow (延迟导入，避免未安装时崩溃)
+        try:
+            import pillow_heif
+            pillow_heif.register_heif_opener()
+        except ImportError:
+            print("警告: pillow_heif 未安装，HEIC 转换功能将不可用")
 
     @property
     def supported_extension(self):

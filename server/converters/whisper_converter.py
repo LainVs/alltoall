@@ -1,9 +1,8 @@
 import os
-import whisper
-import docx
-import fitz
-import torch
 from .base import BaseConverter
+
+# 延迟导入：whisper, torch, docx, fitz 加载很慢，
+# 只在真正需要时导入，加速 Flask 启动
 
 class WhisperConverter(BaseConverter):
     def __init__(self, source_ext, target_ext, model_size="base"):
@@ -21,6 +20,9 @@ class WhisperConverter(BaseConverter):
         return self._target_ext
 
     def _get_model(self, device_pref="auto"):
+        import torch
+        import whisper
+        
         target_device = "cpu"
         if device_pref in ["auto", "gpu"]:
             if torch.cuda.is_available():
@@ -50,6 +52,7 @@ class WhisperConverter(BaseConverter):
 
         if need_reload:
             print(f"Loading Whisper model: {self._model_size} on {target_device}...")
+            import whisper
             self._model = whisper.load_model(self._model_size, device=target_device)
         return self._model
 
@@ -79,6 +82,7 @@ class WhisperConverter(BaseConverter):
             except Exception as e:
                 if "dml" in device_str or "privateuseone" in device_str:
                     print(f"GPU (DirectML) transcription failed: {e}. Falling back to CPU...")
+                    import whisper
                     self._model = whisper.load_model(self._model_size, device="cpu")
                     model = self._model
                     result = model.transcribe(
@@ -97,6 +101,7 @@ class WhisperConverter(BaseConverter):
                 return f"# Transcription of {filename}\n\n{text}", self._target_ext
             
             elif self._target_ext == ".docx":
+                import docx
                 doc = docx.Document()
                 doc.add_heading(f"Transcription of {os.path.basename(file_path)}", 0)
                 doc.add_paragraph(text)
@@ -111,6 +116,7 @@ class WhisperConverter(BaseConverter):
                 
             elif self._target_ext == ".pdf":
                 # 使用 fitz 创建简单的 PDF
+                import fitz
                 doc = fitz.open()
                 page = doc.new_page()
                 

@@ -5,12 +5,6 @@ nbformat
 openai-whisper
 python-docx
 Pillow
-pillow-heif
-realesrgan
-basicsr
-opencv-python
-
 pymupdf
 pandas
 openpyxl
-torch-directml

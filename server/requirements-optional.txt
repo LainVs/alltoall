@@ -1,0 +1,14 @@
+# 可选依赖 - 需要 C++ 编译环境或特定 Python 版本
+# 安装方法: pip install -r requirements-optional.txt
+# 注意: 需要 Python 3.10 或 3.11, 以及 Visual Studio Build Tools
+
+# HEIC 图片转换 (iPhone 照片)
+pillow-heif
+
+# AI 图片超分辨率
+realesrgan
+basicsr
+opencv-python
+
+# Intel/AMD GPU 加速 (可选)
+# torch-directml
