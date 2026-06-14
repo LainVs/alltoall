@@ -8,3 +8,7 @@ Pillow
 pymupdf
 pandas
 openpyxl
+markdown-it-py
+mdit-py-plugins
+playwright
+pygments

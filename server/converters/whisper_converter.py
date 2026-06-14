@@ -115,33 +115,43 @@ class WhisperConverter(BaseConverter):
                 return doc_io.getvalue(), self._target_ext
                 
             elif self._target_ext == ".pdf":
-                # 使用 fitz 创建简单的 PDF
-                import fitz
-                doc = fitz.open()
-                page = doc.new_page()
+                # 优先使用 Playwright 渲染器生成高质量 PDF
+                filename = os.path.basename(file_path)
+                html_body = f"<h1>Transcription of {filename}</h1>\n"
+                # 将文本按段落分割并包裹在 <p> 标签中
+                paragraphs = text.split("\n")
+                for para in paragraphs:
+                    para = para.strip()
+                    if para:
+                        html_body += f"<p>{para}</p>\n"
                 
-                # 定义中文字体路径 (Windows 常用字体)
-                font_path = r"C:\Windows\Fonts\msyh.ttc"
-                font_name = "msyh"
-                
-                # 如果字体不存在，尝试使用内置的或其他备选
-                if os.path.exists(font_path):
-                    page.insert_font(fontname=font_name, fontfile=font_path)
-                else:
-                    # 备选：如果是在 Linux 或其他系统，可能需要不同路径
-                    font_name = "helv" # 回退到默认，但中文会乱码
-                
-                # 写入标题
-                page.insert_text((50, 72), f"Transcription of {os.path.basename(file_path)}", 
-                                 fontsize=16, fontname=font_name)
-                
-                # 写入正文 (使用 textbox 支持换行)
-                rect = fitz.Rect(50, 100, 550, 800)
-                page.insert_textbox(rect, text, fontname=font_name, fontsize=11)
-                
-                pdf_bytes = doc.convert_to_pdf()
-                doc.close()
-                return pdf_bytes, self._target_ext
+                try:
+                    from converters.html_pdf_renderer import create_pdf_from_html
+                    pdf_bytes = create_pdf_from_html(html_body, title=f"Transcription - {filename}")
+                    return pdf_bytes, self._target_ext
+                except Exception:
+                    # 降级方案：使用 fitz 创建简单 PDF
+                    import fitz
+                    doc = fitz.open()
+                    page = doc.new_page()
+                    
+                    font_path = r"C:\Windows\Fonts\msyh.ttc"
+                    font_name = "msyh"
+                    
+                    if os.path.exists(font_path):
+                        page.insert_font(fontname=font_name, fontfile=font_path)
+                    else:
+                        font_name = "helv"
+                    
+                    page.insert_text((50, 72), f"Transcription of {filename}", 
+                                     fontsize=16, fontname=font_name)
+                    
+                    rect = fitz.Rect(50, 100, 550, 800)
+                    page.insert_textbox(rect, text, fontname=font_name, fontsize=11)
+                    
+                    pdf_bytes = doc.convert_to_pdf()
+                    doc.close()
+                    return pdf_bytes, self._target_ext
             
             return text, self._target_ext
             

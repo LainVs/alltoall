@@ -10,6 +10,14 @@ if %errorlevel% neq 0 (
 )
 echo Backend OK
 echo.
+echo Installing Playwright Chromium (for PDF rendering)...
+playwright install chromium
+if %errorlevel% neq 0 (
+    echo Playwright Chromium install failed! PDF rendering may not work.
+    echo You can try running 'playwright install chromium' manually later.
+)
+echo Playwright OK
+echo.
 echo Installing frontend dependencies...
 cd /d "%~dp0client"
 call npm install
@@ -27,3 +35,4 @@ echo.
 echo Optional: pip install -r server\requirements-optional.txt
 echo.
 pause
+

@@ -53,10 +53,10 @@ class PandocConverter(BaseConverter):
         except Exception as e:
             raise Exception(f"Error during pandoc conversion: {str(e)}")
 
-class MdToPdfConverter(BaseConverter):
+class _LegacyMdToPdfConverter(BaseConverter):
     """
-    Chained converter: Markdown ➔ DOCX (Pandoc) ➔ PDF (PyMuPDF).
-    Avoids heavy TeX dependencies.
+    旧版链式转换器: Markdown → DOCX (Pandoc) → PDF (PyMuPDF)。
+    作为备用方案保留，当 Playwright 不可用时使用。
     """
     @property
     def supported_extension(self):
@@ -67,12 +67,11 @@ class MdToPdfConverter(BaseConverter):
         return ".pdf"
 
     def convert(self, file_path):
-        # 1. MD ➔ DOCX (using Pandoc)
+        # 1. MD → DOCX (using Pandoc)
         docx_converter = PandocConverter(".md", ".docx")
         docx_content, _ = docx_converter.convert(file_path)
         
-        # 2. DOCX ➔ PDF (using Fitz/PyMuPDF)
-        # Fitz can open docx and convert to PDF bytes
+        # 2. DOCX → PDF (using Fitz/PyMuPDF)
         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_docx:
             tmp_docx.write(docx_content)
             tmp_docx_path = tmp_docx.name
@@ -85,3 +84,43 @@ class MdToPdfConverter(BaseConverter):
         finally:
             if os.path.exists(tmp_docx_path):
                 os.remove(tmp_docx_path)
+
+
+class MdToPdfConverter(BaseConverter):
+    """
+    智能 Markdown → PDF 转换器。
+    优先使用 Playwright + KaTeX 方案（高质量公式渲染），
+    如果 Playwright 不可用则自动降级到旧的 Pandoc + PyMuPDF 方案。
+    """
+    def __init__(self):
+        self._use_playwright = True
+        # 启动时检测 Playwright 是否可用
+        try:
+            from .html_pdf_renderer import MdToHtmlPdfConverter
+            self._modern_converter = MdToHtmlPdfConverter()
+        except ImportError:
+            print("提示: html_pdf_renderer 依赖未满足，MD→PDF 将使用旧版方案")
+            self._use_playwright = False
+            self._modern_converter = None
+        
+        self._legacy_converter = _LegacyMdToPdfConverter()
+
+    @property
+    def supported_extension(self):
+        return ".md"
+
+    @property
+    def output_extension(self):
+        return ".pdf"
+
+    def convert(self, file_path):
+        if self._use_playwright and self._modern_converter:
+            try:
+                return self._modern_converter.convert(file_path)
+            except RuntimeError as e:
+                # Playwright/Chromium 运行时不可用，降级到旧方案
+                print(f"Playwright PDF 渲染失败，降级到旧版方案: {e}")
+                return self._legacy_converter.convert(file_path)
+        
+        return self._legacy_converter.convert(file_path)
+
